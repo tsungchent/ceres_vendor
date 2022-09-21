@@ -1,0 +1,75 @@
+From 84dc849a0fec8f063d5cd6a3591eb7105ee75352 Mon Sep 17 00:00:00 2001
+From: chencong <chencong@insta360.com>
+Date: Wed, 21 Sep 2022 17:48:02 +0800
+Subject: [PATCH] fix windows suitesparse finding error
+
+---
+ CMakeLists.txt              | 18 ++++++++++--------
+ cmake/FindSuiteSparse.cmake | 15 +++++++++++++++
+ 2 files changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 02c72b5c..0865e5e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,13 +29,12 @@
+ # Authors: keir@google.com (Keir Mierle)
+ #          alexs.mac@gmail.com (Alex Stewart)
+ 
+-cmake_minimum_required(VERSION 2.8.0)
+-cmake_policy(VERSION 2.8)
+-
+-cmake_policy(SET CMP0003 NEW)
+-if (POLICY CMP0042)
+-  cmake_policy(SET CMP0042 NEW)
+-endif()
++cmake_minimum_required(VERSION 3.15)
++# cmake_policy(VERSION 2.8)
++# cmake_policy(SET CMP0003 NEW)
++# if (POLICY CMP0042)
++#  cmake_policy(SET CMP0042 NEW)
++# endif()
+ 
+ project(Ceres C CXX)
+ 
+@@ -245,7 +244,10 @@ if (EIGEN_FOUND)
+ endif (EIGEN_FOUND)
+ 
+ if (LAPACK)
+-  find_package(LAPACK QUIET)
++  find_package(LAPACK CONFIG QUIET)
++  if(NOT LAPACK_FOUND)
++    find_package(LAPACK QUIET)
++  endif()
+   if (LAPACK_FOUND)
+     message("-- Found LAPACK library: ${LAPACK_LIBRARIES}")
+   else (LAPACK_FOUND)
+diff --git a/cmake/FindSuiteSparse.cmake b/cmake/FindSuiteSparse.cmake
+index e887e3bf..4938ed14 100644
+--- a/cmake/FindSuiteSparse.cmake
++++ b/cmake/FindSuiteSparse.cmake
+@@ -112,6 +112,21 @@
+ # TBB_MALLOC_FOUND
+ # TBB_MALLOC_LIBRARY
+ 
++find_package(suitesparse CONFIG QUIET)
++
++if(suitesparse_FOUND)
++  set(SUITESPARSE_FOUND TRUE)
++  set(SUITESPARSE_INCLUDE_DIRS ${SuiteSparse_INCLUDE_DIRS})
++  set(SUITESPARSE_LIBRARIES ${SuiteSparse_LIBRARIES})
++  set(SUITESPARSE_VERSION 5.4.0)
++  set(SUITESPARSE_MAIN_VERSION 5)
++  set(SUITESPARSE_SUB_VERSION 4)
++  set(SUITESPARSE_SUBSUB_VERSION 0)
++  return()
++else()
++  message("Found SUITESPARSE from System")
++endif()
++
+ # Reset CALLERS_CMAKE_FIND_LIBRARY_PREFIXES to its value when
+ # FindSuiteSparse was invoked.
+ macro(SUITESPARSE_RESET_FIND_LIBRARY_PREFIX)
+-- 
+2.35.1.windows.2
+

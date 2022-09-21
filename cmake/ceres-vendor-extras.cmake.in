@@ -1,0 +1,16 @@
+
+find_package(Ceres QUIET)
+
+if(NOT Ceres_FOUND)
+  # add the local Modules directory to the modules path
+  if(WIN32)
+    set(Ceres_DIR "${@PROJECT_NAME@_DIR}/../../../CMake/")
+  endif()
+  message(STATUS "Setting ceres_DIR to: '${ceres_DIR}'")
+  find_package(Ceres CONFIG QUIET)
+endif()
+
+set(@PROJECT_NAME@_LIBRARIES ${CERES_LIBRARIES})
+set(@PROJECT_NAME@_INCLUDE_DIRS ${CERES_INCLUDE_DIRS})
+
+# list(APPEND @PROJECT_NAME@_TARGETS Ceres)

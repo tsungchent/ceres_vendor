@@ -1,7 +1,7 @@
 <package>
-  <name>ceres_catkin</name>
+  <name>ceres_vendor</name>
   <version>1.14.0</version>
-  <description>ceres_catkin</description>
+  <description>ceres_vendor</description>
   <maintainer email="sameeragarwal@google.com">Sameer Agarwal</maintainer>
 
   <license>New BSD</license>
@@ -10,14 +10,17 @@
 
   <author>Sameer Agarwal</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <buildtool_depend>catkin_simple</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <build_depend>atlas</build_depend>
-  <build_depend>eigen</build_depend>
+  <build_depend>eigen_vendor</build_depend>
   <build_depend>libblas-dev</build_depend>
   <build_depend>liblapack-dev</build_depend>
-  <build_depend>gflags_catkin</build_depend>
-  <build_depend>glog_catkin</build_depend>
-  <build_depend>suitesparse</build_depend>
+  <build_depend>gflags_vendor</build_depend>
+  <build_depend>glog_vendor</build_depend>
+  <build_depend>suitesparse_vendor</build_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
